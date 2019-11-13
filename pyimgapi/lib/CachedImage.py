@@ -15,7 +15,7 @@ config.read('./pyimgapi/config.ini')
 class CachedImage():
 	def __init__(self, imageurl = None):
 		self.imageurl = imageurl
-		self.fileformats = ['png', 'jpg', 'jpeg', 'tif', 'tiff', 'bmp']
+		self.known_formats = [fm.strip() for fm in config.get('images', 'known_formats').split(',')]
 		self.cachedir = config.get('image_cache', 'cache_dir')
 		
 		if self.imageurl is None:
@@ -49,7 +49,7 @@ class CachedImage():
 		header = h.headers
 		contenttype = header.get('content-type')
 		
-		for fileformat in self.fileformats:
+		for fileformat in self.known_formats:
 			if fileformat in contenttype.lower():
 				self.extension = fileformat
 				return fileformat
@@ -58,7 +58,7 @@ class CachedImage():
 	
 	def readImage(self):
 		self.image = Image.open(self.cachedfile.name)
-		if self.image.format.lower() not in self.fileformats:
+		if self.image.format.lower() not in self.known_formats:
 			raise ValueError('class ImageCache: image url does not reference an accepted image format')
 	
 	def setImageInfo(self):

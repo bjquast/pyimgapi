@@ -13,6 +13,7 @@ def main(global_config, **settings):
 	
 	config.add_route('imageprocessor', '/process')
 	
+	# ordering of the routes is important here
 	config.add_route('iiif_image_url', '/image/{id}/{region}/{size}/{rotation}/{quality}/{targetfilename}')
 	config.add_route('imageprocessor_image', '/image')
 	
@@ -26,7 +27,6 @@ def main(global_config, **settings):
 
 	
 	config.add_static_view(name='static', path='pyimgapi:static')
-	# ordering of the routes is important here
 	
 	config.scan()
 	return config.make_wsgi_app()
