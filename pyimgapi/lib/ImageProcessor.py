@@ -22,7 +22,7 @@ class ImageProcessor():
 		if self.targetfileformat.lower() in ['tif', 'tiff']:
 			self.img.tiffsave(self.cachedimage.getTargetFilePath(), squash = self.saveparams['squash'])
 			
-		elif self.targetfileformat.lower() in ['pgm', 'pnm', 'pbm', 'pfm']:
+		elif self.targetfileformat.lower() in ['pgm', 'pnm', 'pbm']:
 			self.img.ppmsave(self.cachedimage.getTargetFilePath(), squash = self.saveparams['squash'])
 			
 		elif self.targetfileformat.lower() in ['png']:
@@ -30,6 +30,19 @@ class ImageProcessor():
 		
 		elif self.targetfileformat.lower() in ['jpeg', 'jpg']:
 			self.img.jpegsave(self.cachedimage.getTargetFilePath())
+	
+	
+	def setTargetFileFormat(self, fileformat):
+		# only set the targetfileformat attribute
+		# will be used later in writeImage()
+		self.targetfileformat = fileformat
+		
+		# ensure that the image data are fitting into the ppm formats if they are choosen
+		if self.targetfileformat == 'pbm':
+			self.colorMode('bitonal')
+		elif self.targetfileformat == 'pgm':
+			self.colorMode('gray')
+		
 	
 	def rotateImage(self, angle):
 		self.processed_image = self.img.similarity(angle=float(angle))
@@ -59,6 +72,7 @@ class ImageProcessor():
 				self.processed_image = self.img.resize(factor)
 			self.img = self.processed_image
 		return
+	
 	
 	def getResizeFactor(self, factor, minwidth, minheight, maxwidth, maxheight):
 		# factor is the factor to scale the image size with. When hfactor is set the image will be stretched to the width of factor and the height of hfactor 

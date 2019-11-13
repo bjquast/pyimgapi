@@ -17,7 +17,7 @@ Install virtual python environment:
 ### Install pyimgapi scripts in virtual environment
 Download scripts and change into scripts directory:
 
-    git clone https://username@fredie.eu/gitlab/pyimgapi
+    git clone https://github.com/bjquast/pyimgapi.git
     cd pyimgapi/
     python setup.py develop
 

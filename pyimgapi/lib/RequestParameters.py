@@ -2,11 +2,16 @@ import pudb
 import pyvips
 import re
 
+from configparser import ConfigParser
+config = ConfigParser()
+config.read('./pyimgapi/config.ini')
+
+
 
 class RequestParameters():
 	def __init__(self, request):
 		self.request = request
-		self.processingorder = ('crop', 'rotation', 'resize', 'colormode')
+		self.processingorder = ('crop', 'rotation', 'resize', 'colormode', 'fileformat')
 		self.rotation = None
 		self.colormode = None
 		self.fileformat = None
@@ -27,9 +32,8 @@ class RequestParameters():
 		self.cropwidth = None
 		self.cropheight = None
 		
-		
-		self.known_colormodes = ['gray', 'bitonal', 'color'] #, 'default' does not change the image
-		self.known_formats = ['png', 'jpg', 'tiff', 'tif']
+		self.known_colormodes = [cm.strip() for cm in config.get('images', 'known_colormodes').split(',')] #, 'default' does not change the image
+		self.known_formats = [fm.strip() for fm in config.get('images', 'known_formats').split(',')]
 	
 	
 	def readRequestParams(self):
@@ -58,6 +62,9 @@ class RequestParameters():
 		if 'fileformat' in self.paramsdict:
 			if self.paramsdict['fileformat'][0] in self.known_formats:
 				self.fileformat = self.paramsdict['fileformat'][0]
+		elif 'format' in self.paramsdict:
+			if self.paramsdict['format'][0] in self.known_formats:
+				self.fileformat = self.paramsdict['format'][0]
 	
 	def readRotation(self):
 		if 'rotation' in self.paramsdict:
@@ -66,8 +73,14 @@ class RequestParameters():
 			self.rotation = self.paramsdict['rotate'][0]
 	
 	def readCrop(self):
+		cropparams = None
 		if 'crop' in self.paramsdict:
 			cropparams = self.paramsdict['crop'][0]
+		
+		elif 'region' in self.paramsdict:
+			cropparams = self.paramsdict['region'][0]
+		
+		if cropparams is not None:
 			pattern1 = re.compile(r'(square)', re.I)
 			pattern2 = re.compile(r'(pct\:)*(\d+\.*\d*)*\,(\d+\.*\d*)*\,(\d+\.*\d*)*\,(\d+\.*\d*)*', re.I)
 			
@@ -112,6 +125,10 @@ class RequestParameters():
 		if 'colormode' in self.paramsdict:
 			if self.paramsdict['colormode'][0].lower() in self.known_colormodes:
 				self.colormode = self.paramsdict['colormode'][0]
+		
+		elif 'quality' in self.paramsdict:
+			if self.paramsdict['quality'][0].lower() in self.known_colormodes:
+				self.colormode = self.paramsdict['quality'][0]
 	
 	def readResize(self):
 		resizeparams = None

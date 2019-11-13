@@ -134,8 +134,13 @@ xmlns:metal="http://xml.zope.org/namespaces/metal">
 	</ul>
 
 	
-	<h4>Not yet implemented: Change of file format</h4>
-	
+	<h4>Change of file format</h4>
+	<ul>
+		<li>
+			Set the file format to png <b>fileformat=png</b><br>
+			<a href="${applicationurl}/process?fileformat=png&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?fileformat=png&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
 	
 	<h4>Putting it together</h4>
 	
@@ -154,9 +159,12 @@ xmlns:metal="http://xml.zope.org/namespaces/metal">
 		<li>
 			Set the color mode to grayscale <b>colormode=gray</b><br>
 		</li>
+		<li>
+			Set the file format to jpeg <b>fileformat=jpeg</b><br>
+		</li>
 	</ul>
 	Result: 
-	<a href="${applicationurl}/process?colormode=gray&resize=1000,&crop=3000,500,6000,1500&rotation=15.2&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/Blankenberge_Havenplein.tiff">${applicationurl}/process?colormode=gray&amp;resize=1000,&amp;crop=3000,500,6000,1500&amp;rotation=15.2&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/Blankenberge_Havenplein.tiff</a>
+	<a href="${applicationurl}/process?colormode=gray&resize=1000,&crop=3000,500,6000,1500&rotation=15.2&fileformat=jpeg&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/Blankenberge_Havenplein.tiff">${applicationurl}/process?colormode=gray&amp;resize=1000,&amp;crop=3000,500,6000,1500&amp;rotation=15.2&amp;fileformat=jpeg&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/Blankenberge_Havenplein.tiff</a>
 	
 	
 	<p><br/></p>

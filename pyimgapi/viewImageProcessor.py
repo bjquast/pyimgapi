@@ -28,8 +28,9 @@ class ImageProcessorView(object):
 		
 	
 	@view_config(route_name='imageprocessor')
+	@view_config(route_name='imageprocessor_image')
 	def processorview(self):
-		#pudb.set_trace()
+		# pudb.set_trace()
 		requestparams = RequestParameters(self.request)
 		requestparams.readRequestParams()
 		
@@ -62,6 +63,10 @@ class ImageProcessorView(object):
 				if params is not None:
 					imageprocessor.cropImage(params['croptype'], params['cropunit'], params['offsetx'], params['offsety'], params['cropwidth'], params['cropheight'])
 			
+			elif process == 'fileformat':
+				fileformat = requestparams.getFileFormat()
+				if fileformat is not None:
+					imageprocessor.setTargetFileFormat(fileformat)
 			
 		imageprocessor.writeImage()
 		

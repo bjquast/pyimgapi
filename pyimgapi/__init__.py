@@ -12,6 +12,10 @@ def main(global_config, **settings):
 	config.include('pyramid_chameleon')
 	
 	config.add_route('imageprocessor', '/process')
+	
+	config.add_route('iiif_image_url', '/image/{id}/{region}/{size}/{rotation}/{quality}/{targetfilename}')
+	config.add_route('imageprocessor_image', '/image')
+	
 	config.add_route('imageview', '/view')
 	config.add_route('help', '/')
 	
