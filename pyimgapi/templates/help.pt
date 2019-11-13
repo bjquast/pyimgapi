@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en"
+xmlns:tal="http://xml.zope.org/namespaces/tal"
+xmlns:metal="http://xml.zope.org/namespaces/metal">
+
+<head>
+	<title>${pagetitle}</title>
+	<link rel="stylesheet" type="text/css" href="${request.static_url('pyimgapi:static/css/page.css')}">
+
+
+</head>
+
+<body>
+	<h1>${pagetitle}</h1>
+
+	<h3>Image processing service with IIIF based API</h3>
+	<p>This image processing service provides some basic image processing functions. It can be used with an IIIF compatible API. Users must submit an URL where an image can be downloaded. Image rotation, resizing, croping and color mode change can be controlled by request parameters. The service returns the processed image.</p>
+	
+	
+	<b>Base URL:</b> <li><a href="${applicationurl}/process/">${applicationurl}/process/?imageurl=&lt;url of an image&gt;</a></li>
+	
+	<b>Parameters:</b>
+	<ul>
+	<li><b>imageurl</b> mandatory parameter containing the image url. Image urls containing request parameters must be url encoded</li>
+	<li><b>crop</b> define a cropping area with x and y offsets and a width and height of the remaining image. Possible values are: square; offset x,offset y,width,height (in pixels); pct:offset x,offset y,width,height (in percent)</li>
+	<li><b>rotation</b> a degree by wich the image should be turned in right direction</li>
+	<li><b>resize</b> values for resizing the original image. Possible values are: min width,min height (in pixels); !max width,max height (in pixels); pct:factor (in percent)</li>
+	<li><b>colormode</b> color mode of the resulting image. Possible values are: color; gray; bitonal</li>
+	</ul>
+	
+	
+	
+	<h3>Examples</h3>
+	
+	
+	<h4>imageurl parameter</h4>
+	<ul>
+		<li><a href="${applicationurl}/process?imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a></li>
+	</ul>
+	
+	<ul>
+		<li>
+			The imageurl must be url-encoded when it contains any parameters or fragment identifier:<br/>
+			<a href="${applicationurl}/process?imageurl=https%3A//physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG%23a%20fragment%3Fparameter1%3Dsome%20thing%26parameter2%3Danother%20thing">${applicationurl}/process?imageurl=https%3A//physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG%23a%20fragment%3Fparameter1%3Dsome%20thing%26parameter2%3Danother%20thing</a>
+		</li>
+	</ul>
+	
+	<h4>Crop an image</h4>
+	<ul>
+		<li>
+			Crop image with 900px from left, 150x from top and keep a 1000 px width and 2000 height area from there on: <b>crop=900,150,1000,2000</b><br/>
+			<a href="${applicationurl}/process?crop=900,150,1000,2000&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?crop=900,150,1000,2000&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+
+	<ul>
+		<li>
+			Crop 20 percent from the left, 40 percent from the top and keep 50 percent of the width and 20 percent of the height of the image: <b>crop=pct:20,40,50,20</b><br/>
+			<a href="${applicationurl}/process?crop=pct:20,40,50,20&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?crop=pct:20,40,50,20&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	<ul>
+		<li>
+			Crop parameters must be separated by commas, every parameter can be skipped, but the commas must be present. Missing offsetparameters will be set to 0, missing width and height parameters will be set to with the remaining width or heigthafter substraction of the offset<br/>
+			<a href="${applicationurl}/process?crop=pct:20,,50,&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?crop=pct:20,,50,&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	
+	<ul>
+		<li>
+			The parameter <b>crop=square</b> crops the image on the longer side and keeps the quadratic part in the center of the image<br>
+			<a href="${applicationurl}/process?crop=square&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?crop=square&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	
+	<h4>Rotate an image</h4>
+	
+	<ul>
+		<li>
+			Set the rotation to 8 degree <b>rotation=8</b><br>
+			<a href="${applicationurl}/process?rotation=8&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?rotation=8&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+
+	<h4>Resize an image</h4>
+	
+	<ul>
+		<li>
+			Set the image width to 90px <b>resize=90,</b><br>
+			<a href="${applicationurl}/process?resize=90,&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?resize=90,&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	<ul>
+		<li>
+			Set the image height to 200px <b>resize=,200</b><br>
+			<a href="${applicationurl}/process?resize=,200&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?resize=,200&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	
+	<ul>
+		<li>
+			Stretch the image to a width of 600px and height of 300px <b>resize=600,300</b><br>
+			<a href="${applicationurl}/process?resize=600,300&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?resize=600,300&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	
+	<ul>
+		<li>
+			Set the image to a max width of 200px or max height of 250px <b>resize=!200,250</b><br>
+			<a href="${applicationurl}/process?resize=!200,250&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?resize=!200,250&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	
+	<ul>
+		<li>
+			Resize the image with a factor of 10 percent <b>resize=pct:10</b><br>
+			<a href="${applicationurl}/process?resize=pct:10&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?resize=pct:10&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	
+	<h4>Change the colormode</h4>
+	
+	<ul>
+		<li>
+			Set the image to grayscale <b>colormode=gray</b><br>
+			<a href="${applicationurl}/process?colormode=gray&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?colormode=gray&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+	<ul>
+		<li>
+			Set the image to bitonal <b>colormode=bitonal</b><br>
+			<a href="${applicationurl}/process?colormode=bitonal&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG">${applicationurl}/process?colormode=bitonal&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/IMG_2180.JPG</a>
+		</li>
+	</ul>
+
+	
+	<h4>Not yet implemented: Change of file format</h4>
+	
+	
+	<h4>Putting it together</h4>
+	
+	The image that should be changed: <a href="https://physalia.evolution.uni-bonn.de/dumping/Images/Blankenberge_Havenplein.tiff">https://physalia.evolution.uni-bonn.de/dumping/Images/Blankenberge_Havenplein.tiff</a>
+	
+	<ul>
+		<li>
+			Crop image with 3000px from left, 500px from top and keep a 6000 px width and 1500 height area from there on: <b>crop=3000,500,6000,1500</b><br/>
+		</li>
+		<li>
+			Rotate the image to 15.2 degree in right direction <b>rotation=15.2</b><br>
+		</li>
+		<li>
+			Set the image width to 1000px <b>resize=1000,</b><br>
+		</li>
+		<li>
+			Set the color mode to grayscale <b>colormode=gray</b><br>
+		</li>
+	</ul>
+	Result: 
+	<a href="${applicationurl}/process?colormode=gray&resize=1000,&crop=3000,500,6000,1500&rotation=15.2&imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/Blankenberge_Havenplein.tiff">${applicationurl}/process?colormode=gray&amp;resize=1000,&amp;crop=3000,500,6000,1500&amp;rotation=15.2&amp;imageurl=https://physalia.evolution.uni-bonn.de/dumping/Images/Blankenberge_Havenplein.tiff</a>
+	
+	
+	<p><br/></p>
+
+
+</body>
+</html>
+
