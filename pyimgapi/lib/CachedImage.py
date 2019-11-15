@@ -17,6 +17,7 @@ class CachedImage():
 		self.imageurl = imageurl
 		self.known_formats = [fm.strip() for fm in config.get('images', 'known_formats').split(',')]
 		self.cachedir = config.get('image_cache', 'cache_dir')
+		self.sslverify = config.getboolean('ssl_requests', 'sslverify')
 		
 		if self.imageurl is None:
 			raise ValueError('class ImageCache: no image url provided')
@@ -41,11 +42,11 @@ class CachedImage():
 		self.targetfilepath = self.targetcachedfile.name
 	
 	def fetchImageFromURL(self):
-		r = requests.get(self.imageurl, allow_redirects=True)
+		r = requests.get(self.imageurl, allow_redirects=True, verify=self.sslverify)
 		self.cachedfile.write(r.content)
 	
 	def readFileFormat(self):
-		h = requests.head(self.imageurl, allow_redirects=True)
+		h = requests.head(self.imageurl, allow_redirects=True, verify=self.sslverify)
 		header = h.headers
 		contenttype = header.get('content-type')
 		

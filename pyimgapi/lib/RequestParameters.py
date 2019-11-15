@@ -52,6 +52,7 @@ class RequestParameters():
 		self.readResize()
 		self.readFileFormat()
 		self.readImageURL()
+		self.readTargetFileName()
 	
 	
 	def readImageURL(self):
@@ -84,42 +85,41 @@ class RequestParameters():
 			pattern1 = re.compile(r'(square)', re.I)
 			pattern2 = re.compile(r'(pct\:)*(\d+\.*\d*)*\,(\d+\.*\d*)*\,(\d+\.*\d*)*\,(\d+\.*\d*)*', re.I)
 			
-			m = pattern1.match(cropparams)
-			
-			if m is not None:
-				if m.groups()[0] is not None:
+			m1 = pattern1.match(cropparams)
+			m2 = pattern2.match(cropparams)
+			if m1 is not None:
+				if m1.groups()[0] is not None:
 					self.croptype = 'square'
+					self.regionparams =  {'croptype': self.croptype, 'cropunit': self.cropunit, 'offsetx': self.offsetx, 'offsety': self.offsety, 'cropwidth': self.cropwidth, 'cropheight': self.cropheight}
 			
-			else:
-				m = pattern2.match(cropparams)
-				if m is not None:
-					self.croptype = 'rectangle'
+			elif m2 is not None:
+				self.croptype = 'rectangle'
+				
+				if m2.groups()[0] is not None and m2.groups()[0].lower() == 'pct:':
+					self.cropunit = 'percent'
 					
-					if m.groups()[0] is not None and m.groups()[0].lower() == 'pct:':
-						self.cropunit = 'percent'
-						
-					elif m.groups()[0] is None:
-						self.cropunit = 'pixel'
-					
-					try:
-						self.offsetx = float(m.groups()[1])
-					except TypeError:
-						self.offsetx = None
-					try:
-						self.offsety = float(m.groups()[2])
-					except TypeError:
-						self.offsety = None
-					try:
-						self.cropwidth = float(m.groups()[3])
-					except TypeError:
-						self.cropwidth = None
-					try:
-						self.cropheight = float(m.groups()[4])
-					except TypeError:
-						self.cropheight = None
+				elif m2.groups()[0] is None:
+					self.cropunit = 'pixel'
+				
+				try:
+					self.offsetx = float(m2.groups()[1])
+				except TypeError:
+					self.offsetx = None
+				try:
+					self.offsety = float(m2.groups()[2])
+				except TypeError:
+					self.offsety = None
+				try:
+					self.cropwidth = float(m2.groups()[3])
+				except TypeError:
+					self.cropwidth = None
+				try:
+					self.cropheight = float(m2.groups()[4])
+				except TypeError:
+					self.cropheight = None
+				
+				self.regionparams =  {'croptype': self.croptype, 'cropunit': self.cropunit, 'offsetx': self.offsetx, 'offsety': self.offsety, 'cropwidth': self.cropwidth, 'cropheight': self.cropheight}
 			
-			self.regionparams =  {'croptype': self.croptype, 'cropunit': self.cropunit, 'offsetx': self.offsetx, 'offsety': self.offsety, 'cropwidth': self.cropwidth, 'cropheight': self.cropheight}
-	
 	
 	def readColorMode(self):
 		if 'colormode' in self.paramsdict:
@@ -177,6 +177,13 @@ class RequestParameters():
 			self.resizeparams = {'factor': self.factor, 'minwidth': self.minwidth, 'minheight': self.minheight, 'maxwidth': self.maxwidth, 'maxheight': self.maxheight}
 	
 	
+	def readTargetFileName(self):
+		if 'targetfilename' in self.paramsdict:
+			self.targetfilename = self.paramsdict['targetfilename'][0]
+		elif 'filename' in self.paramsdict:
+			self.targetfilename = self.paramsdict['filename'][0]
+	
+	
 	def getImageURL(self):
 		return self.imageurl
 	
@@ -194,6 +201,9 @@ class RequestParameters():
 	
 	def getResizeParams(self):
 		return self.resizeparams
+	
+	def getTargetFileName(self):
+		return self.targetfilename
 	
 	def getProcessingOrder(self):
 		return self.processingorder

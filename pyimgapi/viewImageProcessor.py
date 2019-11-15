@@ -38,7 +38,10 @@ class ImageProcessorView(object):
 		if imageurl is None:
 			return HTTPNotFound()
 		
-		cachedimage = CachedImage(imageurl)
+		try:
+			cachedimage = CachedImage(imageurl)
+		except ValueError:
+			return HTTPNotFound()
 		imageprocessor = ImageProcessor(cachedimage)
 		
 		
