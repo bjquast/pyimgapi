@@ -55,7 +55,7 @@ class IIIFCanonicalURLView():
 	
 	@view_config(route_name='iiif_image_url')
 	def iiifImageURLView(self):
-		pudb.set_trace()
+		#pudb.set_trace()
 		# first check if i can get an imageurl from path or from id and an url pattern in config.ini
 		if 'id' in self.request.matchdict:
 			self.imageid = self.request.matchdict['id']
