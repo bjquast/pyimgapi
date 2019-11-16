@@ -78,13 +78,14 @@ class IIIFCanonicalURLView():
 			#self.rotation = self.request.matchdict['rotation']
 			self.requestparams['rotation'] = self.request.matchdict['rotation']
 		
-		if 'quality' in self.request.matchdict:
-			#self.quality = self.request.matchdict['quality']
-			self.requestparams['quality'] = self.request.matchdict['quality']
-		
 		if 'targetfilename' in self.request.matchdict:
 			#targetfilename = self.request.matchdict['targetfilename']
 			self.requestparams['targetfilename'] = self.request.matchdict['targetfilename']
+			
+			quality = self.getQualityFromTargetFileName(self.requestparams['targetfilename'])
+			if quality is not None:
+				if quality.lower() in self.known_colormodes:
+					self.requestparams['quality'] = quality
 			
 			fileformat = self.getFormatByExtension(self.requestparams['targetfilename'])
 			if fileformat is not None:
@@ -117,11 +118,21 @@ class IIIFCanonicalURLView():
 	
 	
 	def getFormatByExtension(self, filename):
-		extpattern = '(\.' + '|\.'.join(self.known_formats) + ')$'
+		extpattern = '\.(' + '|'.join(self.known_formats) + ')$'
 		pattern = re.compile(extpattern, re.I)
 		m = pattern.search(filename)
 		if m is not None:
-			extension = m.group()
+			extension = m.groups()[0]
 			return extension
 		return None
+	
+	def getQualityFromTargetFileName(self, filename):
+		qualitypattern = '(.+)(\.' + '|\.'.join(self.known_formats) + ')$'
+		pattern = re.compile(qualitypattern, re.I)
+		m = pattern.search(filename)
+		if m is not None:
+			quality = m.groups()[0]
+			return quality
+		return None
+	
 

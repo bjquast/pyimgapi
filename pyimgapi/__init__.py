@@ -14,7 +14,7 @@ def main(global_config, **settings):
 	config.add_route('imageprocessor', '/process')
 	
 	# ordering of the routes is important here
-	config.add_route('iiif_image_url', '/image/{id}/{region}/{size}/{rotation}/{quality}/{targetfilename}')
+	config.add_route('iiif_image_url', '/image/{id}/{region}/{size}/{rotation}/{targetfilename}')
 	config.add_route('imageprocessor_image', '/image')
 	
 	config.add_route('imageview', '/view')
