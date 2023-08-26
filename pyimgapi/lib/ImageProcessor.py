@@ -2,6 +2,7 @@ import pudb
 import pyvips
 from tempfile import NamedTemporaryFile
 
+from .PyImgAPIErrors import ImageFormatNotAccepted
 
 
 
@@ -20,6 +21,7 @@ class ImageProcessor():
 	
 	
 	def writeImage(self):
+		
 		if self.targetfileformat.lower() in ['tif', 'tiff']:
 			self.img.tiffsave(self.cachedimage.getTargetFilePath(), squash = self.saveparams['squash'])
 			
@@ -31,6 +33,15 @@ class ImageProcessor():
 		
 		elif self.targetfileformat.lower() in ['jpeg', 'jpg']:
 			self.img.jpegsave(self.cachedimage.getTargetFilePath())
+		
+		elif self.targetfileformat.lower() in ['jp2k', 'jp2']:
+			self.img.jp2ksave(self.cachedimage.getTargetFilePath())
+		
+		else:
+			try:
+				self.img.magicksave(self.cachedimage.getTargetFilePath(), format = self.targetfileformat.lower())
+			except:
+				raise ImageFormatNotAccepted('{0} output is not supported'.format(self.targetfileformat.lower()))
 	
 	def writeTiles(self, dzipath):
 		self.img.dzsave(dzipath)

@@ -40,6 +40,7 @@ class ImageProcessorView(object):
 	@view_config(route_name='imageprocessor')
 	@view_config(route_name='imageprocessor_image')
 	def processorview(self):
+		
 		self.requestparams = RequestParameters(self.request)
 		self.requestparams.readRequestParams()
 		
@@ -58,7 +59,10 @@ class ImageProcessorView(object):
 		self.imageprocessor = ImageProcessor(cachedimage)
 		self.run_processings()
 		
-		self.imageprocessor.writeImage()
+		try:
+			self.imageprocessor.writeImage()
+		except ImageFormatNotAccepted as e:
+			return HTTPUnsupportedMediaType(detail=e)
 		
 		targetfile = self.imageprocessor.getTargetFilePath()
 		targetfileformat = self.imageprocessor.getTargetFileFormat()

@@ -3,6 +3,8 @@ pyimgapi.egg-info/**
 image_cache/**
 .image_cache/**
 tiles_cache/**
+imagecache/**
+tilescache/**
 config.ini
 
 

@@ -18,7 +18,7 @@ sslverify = True
 user-agent = pyimgapi (https://example.org; mail@example.org)
 
 [images]
-known_formats = bmp, png, jpg, jpeg, tiff, tif, pnm, pgm, pbm, jp2, jp2k, pdf
+known_formats = bmp, png, jpg, jpeg, tiff, tif, pnm, pgm, pbm, jp2, jp2k, pdf, gif
 known_colormodes = gray, bitonal, color
 
 # image server for canonical III image api
