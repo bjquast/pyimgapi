@@ -1,18 +1,29 @@
+[allowed_domains]
+whitelist = localhost, upload.wikimedia.org
+blacklist = 
 
-
+# temp dir for image processing, files are deleted imediately after processing
 [image_cache]
 cache_dir = ./image_cache
+
+# directory where tiles for deepzoom are stored, the resulting dirs and files are kept as long as you do not delete them
+[tiles_cache]
+dir = ./tilescache
 
 [ssl_requests]
 sslverify = True
 
+# a header for requests to wikimedia to identify you as not being a robot or harvesting machine
+[request_headers]
+user-agent = pyimgapi (https://example.org; mail@example.org)
+
 [images]
-known_formats = png, jpg, jpeg, tiff, tif, pnm, pgm, pbm
+known_formats = bmp, png, jpg, jpeg, tiff, tif, pnm, pgm, pbm, jp2, jp2k, pdf
 known_colormodes = gray, bitonal, color
 
+# image server for canonical III image api
+# this service requires, that an url for the images on the server is given and that the last path component
+# marked as {id} here is the identifier for a single image. Keep the {id} in the url_pattern
 [image_server]
-url_pattern = https://media.zfmk.de/eaurls/image/{id}
-
-
-
+url_pattern = https://example.org/path_to_images/{id}
 

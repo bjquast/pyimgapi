@@ -1,0 +1,3 @@
+
+class ImageFormatNotAccepted(Exception):
+    pass

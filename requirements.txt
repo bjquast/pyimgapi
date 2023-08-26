@@ -1,0 +1,8 @@
+configparser
+pudb
+pyramid
+pyramid_chameleon
+pyramid_debugtoolbar
+pyvips
+requests
+waitress

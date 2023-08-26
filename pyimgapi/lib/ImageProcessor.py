@@ -18,6 +18,7 @@ class ImageProcessor():
 	def loadImage(self):
 		self.img = pyvips.Image.new_from_file(self.cachedimage.getFilePath())
 	
+	
 	def writeImage(self):
 		if self.targetfileformat.lower() in ['tif', 'tiff']:
 			self.img.tiffsave(self.cachedimage.getTargetFilePath(), squash = self.saveparams['squash'])
@@ -30,6 +31,9 @@ class ImageProcessor():
 		
 		elif self.targetfileformat.lower() in ['jpeg', 'jpg']:
 			self.img.jpegsave(self.cachedimage.getTargetFilePath())
+	
+	def writeTiles(self, dzipath):
+		self.img.dzsave(dzipath)
 	
 	
 	def setTargetFileFormat(self, fileformat):

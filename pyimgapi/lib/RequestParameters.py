@@ -208,3 +208,10 @@ class RequestParameters():
 	def getProcessingOrder(self):
 		return self.processingorder
 	
+	def getProcessParamsList(self):
+		processparams = ['crop', 'region', 'rotation', 'rotate', 'resize', 'size', 'colormode', 'quality']
+		processlist = []
+		for process in processparams:
+			if process in self.paramsdict:
+				processlist.append('{0}={1}'.format(process, self.paramsdict[process][0]))
+		return processlist

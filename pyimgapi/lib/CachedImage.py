@@ -2,8 +2,12 @@ import pudb
 import requests
 import os
 import time
-from PIL import Image
+import re
+
+#from PIL import Image
+import pyvips
 from tempfile import NamedTemporaryFile 
+from .PyImgAPIErrors import ImageFormatNotAccepted
 
 from configparser import ConfigParser
 config = ConfigParser()
@@ -13,25 +17,27 @@ config.read('./pyimgapi/config.ini')
 # from https://www.codementor.io/aviaryan/downloading-files-from-urls-in-python-77q3bs0un
 
 class CachedImage():
-	def __init__(self, imageurl = None):
+	def __init__(self, imageurl, cachedir, tilesdir):
 		self.imageurl = imageurl
-		self.known_formats = [fm.strip() for fm in config.get('images', 'known_formats').split(',')]
-		self.cachedir = config.get('image_cache', 'cache_dir')
+		self.cachedir = cachedir
+		self.tilesdir = tilesdir
 		self.sslverify = config.getboolean('ssl_requests', 'sslverify')
 		
-		if self.imageurl is None:
-			raise ValueError('class ImageCache: no image url provided')
+		self.user_agent = config.get('request_headers', 'user-agent')
+		self.request_headers = {'User-Agent': self.user_agent}
 		
-		self.fileformat = self.readFileFormat()
-		if self.fileformat is None:
-			raise ValueError('class ImageCache: image url does not reference an image')
-		
-		
+		if not os.path.isdir(self.cachedir):
+			os.makedirs(self.cachedir)
+
+		if not os.path.isdir(self.tilesdir):
+			os.makedirs(self.tilesdir)
+
 		self.createTempFiles()
 		self.fetchImageFromURL()
-		self.readImage()
+		self.readImageFormat()
 		self.setImageInfo()
-		self.image.close()
+		
+		del self.image
 	
 	
 	
@@ -42,25 +48,17 @@ class CachedImage():
 		self.targetfilepath = self.targetcachedfile.name
 	
 	def fetchImageFromURL(self):
-		r = requests.get(self.imageurl, allow_redirects=True, verify=self.sslverify)
+		r = requests.get(self.imageurl, allow_redirects=True, verify=self.sslverify, headers=self.request_headers)
 		self.cachedfile.write(r.content)
 	
-	def readFileFormat(self):
-		h = requests.head(self.imageurl, allow_redirects=True, verify=self.sslverify)
-		header = h.headers
-		contenttype = header.get('content-type')
+	def readImageFormat(self):
+		try:
+			self.image = pyvips.Image.new_from_file(self.cachedfile.name)
+		except pyvips.error.Error as e:
+			raise ImageFormatNotAccepted('Image url does not reference an accepted image format.')
 		
-		for fileformat in self.known_formats:
-			if fileformat in contenttype.lower():
-				self.extension = fileformat
-				return fileformat
-		
-		return None
-	
-	def readImage(self):
-		self.image = Image.open(self.cachedfile.name)
-		if self.image.format.lower() not in self.known_formats:
-			raise ValueError('class ImageCache: image url does not reference an accepted image format')
+		loader = self.image.get('vips-loader')
+		self.fileformat = re.sub(r'load$', '', loader)
 	
 	def setImageInfo(self):
 		self.height = self.image.height
@@ -77,6 +75,10 @@ class CachedImage():
 	def getTargetFilePath(self):
 		return self.targetfilepath
 	
+	def closeTempFiles(self):
+		self.cachedfile.close()
+		self.targetcachedfile.close()
+
 
 
 
