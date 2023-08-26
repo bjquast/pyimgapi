@@ -5,7 +5,7 @@ from pyramid.response import Response
 from pyramid.response import FileResponse
 from pyramid.renderers import render_to_response
 from pyramid.view import (view_config, view_defaults)
-from pyramid.httpexceptions import HTTPFound, HTTPNotFound, HTTPSeeOther, HTTPUnsupportedMediaType
+from pyramid.httpexceptions import HTTPFound, HTTPNotFound, HTTPSeeOther, HTTPUnsupportedMediaType, exception_response
 from configparser import ConfigParser
 
 import pudb

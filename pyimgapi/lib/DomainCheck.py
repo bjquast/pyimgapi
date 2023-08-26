@@ -36,21 +36,13 @@ class DomainCheck():
 		allowed = True
 		if len(self.whitelist) > 0:
 			allowed = False
-			if (self.isInList(self.whitelist)):
+			if self.domain in self.whitelist:
 				allowed = True
-		if (self.isInList(self.blacklist)):
-			allowed = False
+		if len(self.blacklist) > 0:
+			if self.domain in self.blacklist:
+				allowed = False
 		return allowed
 
-
-	def isInList(self, domainlist):
-		if len(domainlist) > 0:
-			if self.domain in domainlist:
-				return True
-			else:
-				return False
-		else:
-			return True
 
 
 

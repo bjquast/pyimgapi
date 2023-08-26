@@ -8,7 +8,7 @@ cache_dir = ./image_cache
 
 # directory where tiles for deepzoom are stored, the resulting dirs and files are kept as long as you do not delete them
 [tiles_cache]
-dir = ./tilescache
+dir = ./tiles_cache
 
 [ssl_requests]
 sslverify = True
